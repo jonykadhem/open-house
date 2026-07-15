@@ -13,6 +13,7 @@ const session = require('express-session')
 const { MongoStore } = require('connect-mongo')
 
 const authCtrl = require('./controllers/auth')
+const listingsCtrl = require('./controllers/listings')
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : "3000";
@@ -45,12 +46,15 @@ app.get('/', (req, res) => {
     })
 })
 
-
+// auth routers
 app.get('/auth/sign-up', authCtrl.showSignUpForm )
 app.post('/auth/sign-up', authCtrl.signUp)
 app.get('/auth/sign-in', authCtrl.showSignInForm)
 app.post('/auth/sign-in', authCtrl.signIn)
 app.delete('/auth/sign-out', authCtrl.signOut)
+
+// listing routers 
+app.get('/listing/new', listingsCtrl.showNewForm)
 
 app.get('/dashboard', async (req, res) => {
     if (!req.session.user){
