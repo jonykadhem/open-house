@@ -12,6 +12,11 @@ const morgan = require("morgan");
 const session = require('express-session')
 const { MongoStore } = require('connect-mongo')
 
+//meddleware
+const isSignedIn = require('./middleware/is-signed-in')
+const passUserToView = require('./middleware/pass-user-to-view')
+
+//controllers
 const authCtrl = require('./controllers/auth')
 const listingsCtrl = require('./controllers/listings')
 
@@ -39,6 +44,8 @@ app.use(session({
         mongoUrl: process.env.MONGODB_URI
     }),
 }))
+app.use(passUserToView)
+
 
 app.get('/', (req, res) => {
     res.render('home.ejs', {
@@ -54,15 +61,12 @@ app.post('/auth/sign-in', authCtrl.signIn)
 app.delete('/auth/sign-out', authCtrl.signOut)
 
 // listing routers 
-app.get('/listing/new', listingsCtrl.showNewForm)
+app.get('/listing/new', isSignedIn, listingsCtrl.showNewForm)
+app.post('/listings', listingsCtrl.creat)
+app.get('/listings', listingsCtrl.index)
 
-app.get('/dashboard', async (req, res) => {
-    if (!req.session.user){
-        return res.redirect('/auth/sign-in')
-    }
-    res.render('dashboard.ejs', {
-        user: req.session.user
-    })
+app.get('/dashboard', isSignedIn,async (req, res) => {
+    res.render('dashboard.ejs')
 })
 
 app.listen(port, () => {
