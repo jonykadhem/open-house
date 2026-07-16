@@ -46,6 +46,10 @@ const listingSchema = new mongoose.Schema({
     },
 
     questins: [questionSchema],
+    favoritedByUsers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+    }],
 }, { timestamps: true })
 
 const Listing = mongoose.model('Listing', listingSchema)

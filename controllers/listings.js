@@ -32,11 +32,13 @@ const index = async (req, res) => {
 
 const showListing = async (req, res) => {
     let foundListing = await Listing.findById(req.params.listingId).populate('owner').populate('questins.author')
-    console.log(foundListing);
-
-    res.render('listings/show.ejs', { foundListing }
-
-    )
+    const userHasFavorited = foundListing.favoritedByUsers.some(user => {
+       return user.equals(req.session.user._id)
+    })
+    res.render('listings/show.ejs', {
+    foundListing,
+    userHasFavorited
+    })
 }
 
 const deleteListing = async (req, res) => {
@@ -51,13 +53,12 @@ const deleteListing = async (req, res) => {
         })
     }
 }
-const showEditList = async(req,res) => {
-let foundListing = await Listing.findById(req.params.listingId).populate('owner')
-        
-        res.render('listings/edit.ejs',{
+const showEditList = async (req, res) => {
+    let foundListing = await Listing.findById(req.params.listingId).populate('owner')
+    res.render('listings/edit.ejs',{
     foundListing
 })
-    
+
 }
 
 const editListing = async (req, res) => {
@@ -67,9 +68,24 @@ const editListing = async (req, res) => {
     // listingData.city = req.body.city
     // listingData.size = req.body.size
     // listingData.image = req.body.image
-   await Listing.findByIdAndUpdate(req.params.listingId, req.body)
+    await Listing.findByIdAndUpdate(req.params.listingId, req.body)
     res.redirect(`/listings/${req.params.listingId}`)
 
+}
+
+const favorite = async (req, res) => {
+    await Listing.findByIdAndUpdate(req.params.listingId, {
+        $push: { favoritedByUsers: req.params.userId }
+    })
+
+    res.redirect(`/listings/${req.params.listingId}`)
+}
+const unfavorite = async (req, res) => {
+    await Listing.findByIdAndUpdate(req.params.listingId, {
+        $pull: { favoritedByUsers: req.params.userId }
+    })
+
+    res.redirect(`/listings/${req.params.listingId}`)
 }
 
 
@@ -81,4 +97,6 @@ module.exports = {
     deleteListing,
     editListing,
     showEditList,
+    favorite,
+    unfavorite,
 }
