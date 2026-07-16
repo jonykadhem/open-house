@@ -1,0 +1,26 @@
+<%- include('../partials/nav') %>
+
+    <h1>Edit The Listing</h1>
+
+    <form action="/listings/<%= foundListing._id %>?_method=PUT" method="POST">
+        <label for="price">Price: </label>
+        <input type="number" name="price" min="0"  value="<%= foundListing.price %>"/>
+        <br>
+        <label for="streetAddress">Street Address: </label>
+        <input type="text" name="streetAddress" value="<%= foundListing.streetAddress %>"/>
+        <br>
+        <label for="city">City: </label>
+        <input type="text" name="city" value="<%= foundListing.city %>"/>
+        <br>
+        <label for="size">Size: </label>
+        <input type="number" name="size" min="0" value="<%= foundListing.size %>"/>
+        <br>
+        <label for="image">Image: </label>
+        <input type="text" name="image" value="<%= foundListing.image %>" />
+        <br>
+        <button type="submit">Edit Listing</button>
+    </form>
+
+</body>
+
+</html>

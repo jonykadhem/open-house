@@ -1,0 +1,25 @@
+<%- include('../partials/nav') %>
+
+    <h1>I'm A listing</h1>
+    <img src="<%= foundListing.image %>" alt="house image" width="300">
+    <p>City: <%= foundListing.city %></p>
+    <p>Price <%= foundListing.price %></p>
+    <p>Street Address <%= foundListing.streetAddress %></p>
+    <p>Size <%= foundListing.size %></p>
+    
+    <% if (foundListing.owner._id.equals(user._id)) { %>
+     you own this
+     <form action="/listings/<%= foundListing._id %>?_method=DELETE" method="POST">
+            <button type="submit">Delete this Listing</button>
+        </form>
+        <a href="/listings/<%= foundListing._id %>/edit">Edit this Listing</a>
+    <% } %>
+    <p>Owend By: <%= foundListing.owner.username %></p>
+
+    
+
+
+
+    </body>
+
+    </html>

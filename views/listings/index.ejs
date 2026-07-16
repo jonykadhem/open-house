@@ -3,16 +3,19 @@
 <h1>View All Listings</h1>
 
 <% allListings.forEach(element => { %>
+    
+    
     <div>
-        
-        <img src="<%= element.image %>" alt="house image" width="300">
-        <p>Price <%= element.price %></p>
-        <p>Street Address <%= element.streetAddress %></p>
-        <p>City: <%= element.city %></p>
-        <p>Size <%= element.size %></p>
+            <a href="/listings/<%= element._id %>">
+            <img src="<%= element.image %>" alt="house image" width="300">
+            <p>City: <%= element.city %></p>
+            <p>Owend By: <%= element.owner.username %></p>
+            </a>
     </div>
-
-<% }) %>
+    
+    <% }) %>
     
 </body>
 </html>
+
+

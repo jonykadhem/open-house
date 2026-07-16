@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const session = require('express-session')
+const path = require('path')
 const { MongoStore } = require('connect-mongo')
 
 //meddleware
@@ -34,6 +35,7 @@ mongoose.connection.on("connected", () => {
 app.use(express.urlencoded({ extended: false }));
 // Middleware for using HTTP verbs such as PUT or DELETE
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "public")))
 // Morgan for logging HTTP requests
 app.use(morgan('dev'));
 app.use(session({
@@ -64,9 +66,19 @@ app.delete('/auth/sign-out', authCtrl.signOut)
 app.get('/listing/new', isSignedIn, listingsCtrl.showNewForm)
 app.post('/listings', listingsCtrl.creat)
 app.get('/listings', listingsCtrl.index)
+app.get('/listings/:listingId',isSignedIn, listingsCtrl.showListing)
+app.delete('/listings/:listingId', isSignedIn, listingsCtrl.deleteListing)
+app.get('/listings/:listingId/edit', isSignedIn, listingsCtrl.showEditList)
+app.put('/listings/:listingId', isSignedIn, listingsCtrl.editListing)
 
 app.get('/dashboard', isSignedIn,async (req, res) => {
     res.render('dashboard.ejs')
+})
+
+app.get ('/*splat', (req,res) => {
+    res.render('error.ejs',{
+        msg: 404
+    })
 })
 
 app.listen(port, () => {

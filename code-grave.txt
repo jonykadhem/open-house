@@ -1,0 +1,4 @@
+// code grave 
+// <p>Price <%= element.price %></p>
+// <p>Street Address <%= element.streetAddress %></p>
+// <p>Size <%= element.size %></p>
