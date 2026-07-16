@@ -45,7 +45,7 @@ const listingSchema = new mongoose.Schema({
         required: true,
     },
 
-
+    questins: [questionSchema],
 }, { timestamps: true })
 
 const Listing = mongoose.model('Listing', listingSchema)

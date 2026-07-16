@@ -31,7 +31,7 @@ const index = async (req, res) => {
 }
 
 const showListing = async (req, res) => {
-    let foundListing = await Listing.findById(req.params.listingId).populate('owner')
+    let foundListing = await Listing.findById(req.params.listingId).populate('owner').populate('questins.author')
     console.log(foundListing);
 
     res.render('listings/show.ejs', { foundListing }

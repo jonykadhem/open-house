@@ -16,7 +16,19 @@
     <% } %>
     <p>Owend By: <%= foundListing.owner.username %></p>
 
-    
+    <section>
+        <h2>Questions about this property?</h2>
+        <form action="/listings/<%= foundListing._id %>/questions" method="post">
+            <textarea name="text" rows="4" required></textarea>
+<br>
+            <button type="submit">Ask Question</button>
+        </form>
+        <h3>Quistions from users</h3>
+        <% foundListing.questins.forEach((element) => { %>
+            <p><%= element.text %></p>
+            <p>Asked by: <%= element.author.username %></p>
+        <% }) %>
+    </section>
 
 
 

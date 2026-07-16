@@ -20,6 +20,7 @@ const passUserToView = require('./middleware/pass-user-to-view')
 //controllers
 const authCtrl = require('./controllers/auth')
 const listingsCtrl = require('./controllers/listings')
+const questinsCtrl = require('./controllers/questions')
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : "3000";
@@ -70,6 +71,9 @@ app.get('/listings/:listingId',isSignedIn, listingsCtrl.showListing)
 app.delete('/listings/:listingId', isSignedIn, listingsCtrl.deleteListing)
 app.get('/listings/:listingId/edit', isSignedIn, listingsCtrl.showEditList)
 app.put('/listings/:listingId', isSignedIn, listingsCtrl.editListing)
+
+//questions routers
+app.post('/listings/:listingId/questions', questinsCtrl.creat)
 
 app.get('/dashboard', isSignedIn,async (req, res) => {
     res.render('dashboard.ejs')
