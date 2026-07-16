@@ -12,6 +12,7 @@ const morgan = require("morgan");
 const session = require('express-session')
 const path = require('path')
 const { MongoStore } = require('connect-mongo')
+const upload = require('./config/multer')
 
 //meddleware
 const isSignedIn = require('./middleware/is-signed-in')
@@ -65,12 +66,12 @@ app.delete('/auth/sign-out', authCtrl.signOut)
 
 // listing routers 
 app.get('/listing/new', isSignedIn, listingsCtrl.showNewForm)
-app.post('/listings', listingsCtrl.creat)
+app.post('/listings',isSignedIn,upload.single('image'), listingsCtrl.creat)
 app.get('/listings', listingsCtrl.index)
 app.get('/listings/:listingId',isSignedIn, listingsCtrl.showListing)
 app.delete('/listings/:listingId', isSignedIn, listingsCtrl.deleteListing)
 app.get('/listings/:listingId/edit', isSignedIn, listingsCtrl.showEditList)
-app.put('/listings/:listingId', isSignedIn, listingsCtrl.editListing)
+app.put('/listings/:listingId', isSignedIn,upload.single('image'), listingsCtrl.editListing)
 app.post('/listings/:listingId/favorited-by/:userId', isSignedIn, listingsCtrl.favorite)
 app.delete('/listings/:listingId/favorited-by/:userId', isSignedIn, listingsCtrl.unfavorite)
 

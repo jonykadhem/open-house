@@ -1,18 +1,48 @@
 const Listing = require('../models/listing')
-const User = require('../models/user')
+const cloudinary = require('../config/cloudinary')
 
+const uploadImage = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'open-house/listings',
+        resource_type: 'image',
+      },
+      (error, result) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(result)
+        }
+      }
+    )
+
+    uploadStream.end(fileBuffer)
+  })
+}
 
 const showNewForm = (req, res) => {
     res.render('listings/new.ejs')
 }
 
 const creat = async (req, res) => {
+    if(!req.file){
+        return res.render('error.ejs', {
+            msg: 'please select an image.'
+        })
+    }
+    const uploadedImage = await uploadImage(req.file.buffer)
+
     const listingData = {}
     listingData.price = req.body.price
     listingData.streetAddress = req.body.streetAddress
     listingData.city = req.body.city
     listingData.size = req.body.size
     listingData.owner = req.session.user._id
+    listingData.image= {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+    }
 
     if (req.body.image) {
         listingData.image = req.body.image
@@ -62,12 +92,24 @@ const showEditList = async (req, res) => {
 }
 
 const editListing = async (req, res) => {
+    const foundListing = await Listing.findById(req.params.listingId).populate('owner')
+    const oldPublicId = foundListing.image?.publicId
+    
     // const listingData = {}
     // listingData.price = req.body.price
     // listingData.streetAddress = req.body.streetAddress
     // listingData.city = req.body.city
     // listingData.size = req.body.size
     // listingData.image = req.body.image
+
+   if (req.file) {
+        let uploadedImage = await uploadImage(req.file.buffer);
+        req.body.image = {
+            url: uploadedImage.secure_url,
+            publicId: uploadedImage.public_id
+        }
+    }
+
     await Listing.findByIdAndUpdate(req.params.listingId, req.body)
     res.redirect(`/listings/${req.params.listingId}`)
 

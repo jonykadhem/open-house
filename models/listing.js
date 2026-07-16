@@ -21,9 +21,16 @@ const listingSchema = new mongoose.Schema({
 
     },
     image: {
-        type: String,
-        default: 'https://images.pexels.com/photos/1438832/pexels-photo-1438832.jpeg?_gl=1*1axbrom*_ga*MTkyMDczNjU2Ny4xNzgxNTA1OTMy*_ga_8JE65Q40S6*czE3ODQxMDM3OTEkbzMkZzEkdDE3ODQxMDM4MDUkajQ2JGwwJGgw',
+        url: {
 
+            type: String,
+            required: true,
+        },
+        
+        publicId: {
+            type: String,
+        required: true,
+        },
     },
     streetAddress: {
         type: String,
